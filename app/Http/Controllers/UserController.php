@@ -111,8 +111,16 @@ class UserController extends Controller
      */
     public function storeConfig(Request $request){
 
+        $data=$request->json()->all();
+        $user_id = $data['user_id'];
+        $count=Config::where('user_id', '=', $user_id)->count();
+        if($count>0){
+            $deletedRows = Config::where('user_id', '=', $user_id)->delete();
+        }
+        $configs = DB::table('configs')->where('user_id', '=', $user_id)->get();
         Config::create($request->json()->all());
         return response()->json(['success' => true]);
+
     }
 
     /**
