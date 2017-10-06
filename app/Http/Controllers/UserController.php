@@ -9,6 +9,7 @@ use App\Post;
 use App\User;
 use App\Monster;
 use App\Game;
+use App\Config;
 
 class UserController extends Controller
 {
@@ -93,7 +94,7 @@ class UserController extends Controller
     /**
      * @return mixed
      */
-    public function leaderBoard (){
+    public function leaderBoard(){
 
         $leaders=User::orderBy('level', 'desc')->get();
         $i=0;
@@ -102,5 +103,24 @@ class UserController extends Controller
             $array[] = array("userid" => $leader->id, "level" => $leader->level, "rank" => $i);
         }
         return response()->json(['entries'=>$array]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function storeConfig(Request $request){
+
+        Config::create($request->json()->all());
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * @param $user_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function listConfigs($user_id){
+        $configs = DB::table('configs')->where('user_id', '=', $user_id)->get();
+        return response()->json($configs);
     }
 }

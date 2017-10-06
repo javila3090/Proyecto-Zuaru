@@ -24,3 +24,5 @@ Route::put('posts/{post}', 'PostController@update');
 Route::get('user/{user_id}/posts', 'PostController@show');
 Route::get('user/{user_id}/jugar', 'UserController@play');
 Route::get('leaderboard', 'UserController@leaderBoard');
+Route::post('usersave', 'UserController@storeConfig');
+Route::get('user/{user_id}/userload', 'UserController@listConfigs');
