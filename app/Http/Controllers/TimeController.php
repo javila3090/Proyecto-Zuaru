@@ -9,7 +9,7 @@ class TimeController extends Controller
 {
 
     /**
-     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index(){
 

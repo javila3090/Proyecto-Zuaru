@@ -6,6 +6,8 @@ use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Psy\Exception\ErrorException;
+use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
@@ -66,6 +68,16 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'Error' => true, 'ErrorMessage' => 'Bad Request'
             ], 400);
+        }
+        if ($exception instanceof FatalErrorException) {
+            return response()->json([
+                'Error' => true, 'ErrorMessage' => 'Internal Error Server'
+            ], 500);
+        }
+        if ($exception instanceof ErrorException) {
+            return response()->json([
+                'Error' => true, 'ErrorMessage' => 'Internal Error Server'
+            ], 500);
         }
 
         return parent::render($request, $exception);

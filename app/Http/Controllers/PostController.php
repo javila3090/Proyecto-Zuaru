@@ -15,9 +15,15 @@ class PostController extends Controller
      */
     public function index()
     {
-        return Post::all();
+        $posts = DB::table('posts')->get(['id','title','content']);
+        return response()->json(['posts' => $posts]);
     }
 
+    /**
+     * @param Request $request
+     * @param $user_id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show(Request $request, $user_id)
     {
         $limit=$request->limit;
