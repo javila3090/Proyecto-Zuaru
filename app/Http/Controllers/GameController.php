@@ -117,28 +117,26 @@ class GameController extends Controller
             $user = User::where('api_token', '=', $token)->get();
 
             //Obtenemos los registros de todos los usuarios
-            if ($limit != null) {
-                $leaders = User::orderBy('level', 'desc')->offset($offset)->limit($limit)->get();
-            } else {
-                $leaders = User::orderBy('level', 'desc')->get();
-            }
+
+            //$leaders = User::orderBy('level', 'desc')->get();
+            $leaders = DB::table('users')
+                ->join('games', 'users.id', '=', 'games.user_id')
+                ->select('users.id','users.level', DB::raw("count(games.result_type) as victories_count"))
+                ->where('games.result_type','=','2')
+                ->groupBy('users.id','users.level')
+                ->orderBy('victories_count','desc')
+                ->get();
+
 
             //Creando array con los datos recibidos desde base de datos
             foreach ($leaders as $leader) {
                 $i++;
                 $array[] = array("userid" => $leader->id, "level" => $leader->level, "rank" => $i);
-                if ($leader->id == $user[0]['id']) {
-                    $userRank = $i;
-                }else if ($leader->level > $user[0]['level']) {
-                    $userRank = $i+1;
-                }else{
-                    $userRank = $i - 1;
-                }
             }
 
             //Agregando el rank en el array del usuario que solicita la información
             foreach ($user as $v) {
-                $arrayUser[] = array("userid" => $v->id, "level" => $v->level, "rank" => $userRank);
+                $arrayUser[] = array("userid" => $v->id, "level" => $v->level);
             }
 
             return response()->json(["Request User" => $arrayUser, 'entries' => $array]);

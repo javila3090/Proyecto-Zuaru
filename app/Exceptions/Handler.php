@@ -69,11 +69,7 @@ class Handler extends ExceptionHandler
                 'Error' => true, 'ErrorMessage' => 'Bad Request'
             ], 400);
         }
-        if ($exception instanceof FatalErrorException) {
-            return response()->json([
-                'Error' => true, 'ErrorMessage' => 'Internal Error Server'
-            ], 500);
-        }
+
         if ($exception instanceof ErrorException) {
             return response()->json([
                 'Error' => true, 'ErrorMessage' => 'Internal Error Server'
