@@ -129,6 +129,10 @@ class GameController extends Controller
                 $array[] = array("userid" => $leader->id, "level" => $leader->level, "rank" => $i);
                 if ($leader->id == $user[0]['id']) {
                     $userRank = $i;
+                }else if ($leader->level > $user[0]['level']) {
+                    $userRank = $i+1;
+                }else{
+                    $userRank = $i - 1;
                 }
             }
 
